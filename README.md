@@ -1,6 +1,5 @@
-[![Docker Repository on Quay.io](https://quay.io/repository/digitalprivacy/kubernetes-bind/status "Docker Repository on Quay.io")](https://quay.io/repository/digitalprivacy/kubernetes-bind)
 
-# digitalprivacy/bind:0.2
+# blackhatch/bind:0.2
 
 - [Introduction](#introduction)
   - [Contributing](#contributing)
@@ -16,7 +15,45 @@
 
 # Introduction
 
+Debian based docker image for a local / private DNS resolver, capable of resolving both IANA and OpenNIC domains.
+
+There are currently two flavours of DNS server configurations ready to be pulled and used:
+
+    Bind9 | docker pull blackhatch/onion-dns:bind
+    UNBOUND | docker pull blackhatch/onion-dns:unbound
+
+| How to use it |
+
+Pull the docker image according to the desired DNS server flavour.
+
+Run the container (requires root privileges in order to use ports < 1024):
+
+docker run -dit -p 53:53/udp --name resolver undertuga/opennic
+
+It's probably a good idea to access the terminal and update system packages before starting to use the service:
+
+docker exec -it resolver bash
+
+apt update && apt upgrade -y
+
+Test the resolver (assuming that you have dnsutils / digg installed on linux or mac):
+
+dig @127.0.0.1 docker.com
+
+| Security Hint |
+
+This DNS implementation is designed to be used as a local or private DNS Resolver. Do not expose it to the wild!!!
+
+| Additional Info |
+
+Concept triggered by the need to dockerize this:
+
+    Your local DNS Resolver | OpenNIC + IANA
+    OpenNIC | Who, When, Why?
+
 `Dockerfile` to create a [Docker](https://www.docker.com/) container image for [BIND](https://www.isc.org/downloads/bind/) DNS server.
+`docker-compose.yml` to create a [Docker Compose](https://www.docker.com/) stack [BIND](https://www.isc.org/downloads/bind/) DNS server.
+
 
 BIND is open source software that implements the Domain Name System (DNS) protocols for the Internet. It is a reference implementation of those protocols, but it is also production-grade software, suitable for use in high-volume and high-reliability applications.
 
@@ -36,18 +73,17 @@ If you find this image useful here's how you can help:
 
 ## Installation
 
-Automated builds of the image are available on [Dockerhub](https://hub.docker.com/r/digitalprivacy/docker-bind) and is the recommended method of installation.
+Automated builds of the image are available on [Dockerhub](https://hub.docker.com/r/blackhatch/onion-dns) and is the recommended method of installation.
 
-> **Note**: Builds are also available on [Quay.io](https://quay.io/repository/digitalprivacy/kubernetes-bind)
 
 ```bash
-docker pull digitalprivacy/bind:0.2
+docker pull blackhatch/bind:0.2
 ```
 
 Alternatively you can build the image yourself.
 
 ```bash
-docker build -t digitalprivacy/bind .
+docker build -t blackhatch/bind .
 ```
 
 ## Quickstart
@@ -58,7 +94,7 @@ Start BIND using:
 docker run --name bind -d --restart=always \
   --publish 53:53/tcp --publish 53:53/udp --publish 10000:10000/tcp \
   --volume /srv/docker/bind:/data \
-  digitalprivacy/bind:0.2
+  blackhatch/bind:0.2
 ```
 
 ## Command-line arguments
@@ -69,7 +105,7 @@ You can customize the launch command of BIND server by specifying arguments to `
 docker run --name bind -it --rm \
   --publish 53:53/tcp --publish 53:53/udp --publish 10000:10000/tcp \
   --volume /srv/docker/bind:/data \
-  digitalprivacy/bind:0.1 -h
+  blackhatch/bind:0.1 -h
 ```
 
 ## Persistence
