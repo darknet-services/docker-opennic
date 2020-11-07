@@ -5,6 +5,8 @@ services:
     image: blackhatch/onion-dns
     restart: always
     container_name: onion-dns
+    volumes:
+      - ./stunnel/:/etc/stunnel/
     ports:
       - "5353:53"
     environment:

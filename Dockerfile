@@ -6,7 +6,7 @@ ENV BIND_USER=bind \
 
 RUN rm -rf /etc/apt/apt.conf.d/docker-gzip-indexes \
  && apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y stunnel openssl wget bind9* bind9-host* dnsutils \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y stunnel prometheus-bind-exporter openssl wget bind9* bind9-host* dnsutils \
  && rm -rf /var/lib/apt/lists/*
 
 COPY srvzone /srvzone 
